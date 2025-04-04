@@ -1,5 +1,3 @@
-// prisma/schema.prisma
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -9,61 +7,86 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// 1. Role enum to define user role
+// Roles
 enum Role {
   HOST
   RENTER
 }
 
-// 2. User model
+// Booking status
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELED
+}
+
+// User model
 model User {
   id          Int       @id @default(autoincrement())
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  // Basic info
   name        String
   email       String     @unique
-  googleId    String?    // For Google OAuth
-  role        Role
+  password    String?    // If direct login is supported
+  googleId    String?    // If using Google OAuth
+  role        Role       @default(RENTER) // Optional default
 
-  // A host can have multiple properties
+  // Relationships
   properties  Property[]
-
-  // A renter can have multiple bookings
   bookings    Booking[]
+
+  // Soft delete (optional)
+  isActive    Boolean    @default(true)
 }
 
-// 3. Property model
+// Property model
 model Property {
   id          Int       @id @default(autoincrement())
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  // Basic info
   title       String
   description String
-  price       Float
+  // Use Decimal for currency
+  price       Decimal    @db.Decimal(10, 2)
+  // If you'll frequently filter by location, consider indexing
   location    String
-  images      String[]? // or a separate Image model if you want more details
+  // 'images' as separate table or as array
+  // images   Image[] // if separate model
+  images      String[]?  // if just storing URLs
 
-  // Relationship to host (who "owns" the property)
+  // Owner relationship
   ownerId     Int
-  owner       User      @relation(fields: [ownerId], references: [id])
+  owner       User       @relation(fields: [ownerId], references: [id])
 
-  // Bookings for this property
+  // Bookings
   bookings    Booking[]
+
+  // Soft delete or availability
+  isActive    Boolean    @default(true)
 }
 
-// 4. Booking model
+// Booking model
 model Booking {
-  id          Int       @id @default(autoincrement())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id          Int            @id @default(autoincrement())
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
   startDate   DateTime
   endDate     DateTime
+  status      BookingStatus  @default(PENDING)
 
   // Relationship to the property being booked
   propertyId  Int
-  property    Property  @relation(fields: [propertyId], references: [id])
+  property    Property       @relation(fields: [propertyId], references: [id])
 
   // Relationship to the user (renter)
   renterId    Int
-  renter      User      @relation(fields: [renterId], references: [id])
+  renter      User           @relation(fields: [renterId], references: [id])
+
+  // Possibly store price at booking time if you want to
+  // keep a record even if the property price changes later
+  totalPrice  Decimal?       @db.Decimal(10, 2)
 }
