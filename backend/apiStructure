@@ -1,0 +1,39 @@
+/api
+├── /auth
+│   ├── POST    /register          - Register new user
+│   ├── POST    /login             - Login user
+│   ├── POST    /logout            - Logout user
+│   ├── GET     /me                - Get current logged-in user
+│   ├── PATCH   /me                - Update profile info
+│   └── PATCH   /change-password   - Change user password
+
+├── /properties
+│   ├── GET     /                  - List all available properties
+│   ├── POST    /                  - Create a new property (host only)
+│   ├── GET     /:id               - Get details of a property
+│   ├── PATCH   /:id               - Update a property (owner only)
+│   ├── DELETE  /:id               - Delete a property (owner only)
+│   └── GET     /my                - Get properties of the logged-in host
+
+├── /bookings
+│   ├── POST    /                  - Create a booking
+│   ├── GET     /                  - Get all bookings (admin or user)
+│   ├── GET     /:id               - Get a single booking
+│   ├── DELETE  /:id               - Cancel a booking
+│   └── GET     /my                - Get current user’s bookings
+
+├── /reviews
+│   ├── POST    /:propertyId       - Leave a review for a property
+│   ├── GET     /:propertyId       - Get reviews for a property
+│   └── DELETE  /:id               - Delete a review (owner only)
+
+├── /admin
+│   ├── GET     /users             - List all users
+│   ├── PATCH   /users/:id/block   - Block or unblock a user
+│   ├── GET     /bookings          - All bookings in the system
+│   ├── GET     /properties        - All properties in the system
+│   └── GET     /dashboard         - Stats and analytics
+
+├── /upload
+│   └── POST    /image             - Upload image (e.g., for property)
+

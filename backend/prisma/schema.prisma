@@ -1,0 +1,69 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 1. Role enum to define user role
+enum Role {
+  HOST
+  RENTER
+}
+
+// 2. User model
+model User {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  name        String
+  email       String     @unique
+  googleId    String?    // For Google OAuth
+  role        Role
+
+  // A host can have multiple properties
+  properties  Property[]
+
+  // A renter can have multiple bookings
+  bookings    Booking[]
+}
+
+// 3. Property model
+model Property {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  title       String
+  description String
+  price       Float
+  location    String
+  images      String[]? // or a separate Image model if you want more details
+
+  // Relationship to host (who "owns" the property)
+  ownerId     Int
+  owner       User      @relation(fields: [ownerId], references: [id])
+
+  // Bookings for this property
+  bookings    Booking[]
+}
+
+// 4. Booking model
+model Booking {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  startDate   DateTime
+  endDate     DateTime
+
+  // Relationship to the property being booked
+  propertyId  Int
+  property    Property  @relation(fields: [propertyId], references: [id])
+
+  // Relationship to the user (renter)
+  renterId    Int
+  renter      User      @relation(fields: [renterId], references: [id])
+}
