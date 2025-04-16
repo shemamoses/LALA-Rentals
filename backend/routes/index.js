@@ -5,4 +5,6 @@ router.get("/", (req, res) => {
   res.send("Welcome to lala rental system api");
 });
 
+
+
 module.exports = router;

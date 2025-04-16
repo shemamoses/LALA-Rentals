@@ -56,7 +56,7 @@ model Property {
   location    String
   // 'images' as separate table or as array
   // images   Image[] // if separate model
-  images      String[]?  // if just storing URLs
+  images      String[]  // if just storing URLs
 
   // Owner relationship
   ownerId     Int
