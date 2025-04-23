@@ -1,0 +1,71 @@
+/api/v1
+├── GET    /health  
+│       // Health-check endpoint for monitoring uptime  
+│
+├── auth  
+│   ├── POST   /auth/register        
+│       // Register a new user  
+│   ├── POST   /auth/login           
+│       // Authenticate and issue JWT  
+│   ├── POST   /auth/logout          
+│       // Log out user (invalidate session)  
+│   ├── GET    /auth/me              
+│       // Get current logged-in user profile  
+│   ├── PATCH  /auth/me              
+│       // Update current user’s profile info  
+│   └── PATCH  /auth/me/password     
+│       // Change current user’s password  
+│
+├── users  *(optional grouping for user management)*  
+│
+├── properties  
+│   ├── GET    /properties           
+│       // List all available properties (supports pagination/filters)  
+│   ├── POST   /properties           
+│       // Create a new property (HOST only)  
+│   ├── GET    /properties/:id       
+│       // Get details of a single property  
+│   ├── PATCH  /properties/:id       
+│       // Update a property (OWNER only)  
+│   ├── DELETE /properties/:id       
+│       // Delete a property (OWNER only)  
+│   └── GET    /properties/my        
+│       // List properties belonging to the logged-in host  
+│
+├── bookings  
+│   ├── POST   /bookings             
+│       // Create a booking (USER only)  
+│   ├── GET    /bookings             
+│       // List all bookings (ADMIN) or filter by USER  
+│   ├── GET    /bookings/:id         
+│       // Get details of a single booking  
+│   ├── DELETE /bookings/:id         
+│       // Cancel a booking (USER only)  
+│   └── GET    /bookings/my          
+│       // List bookings for the current user  
+│
+├── reviews  
+│   ├── GET    /reviews/:propertyId  
+│       // Fetch all reviews for a property  
+│   ├── POST   /reviews/:propertyId  
+│       // Leave a review on a property (USER only)  
+│   └── DELETE /reviews/:id          
+│       // Delete a review (OWNER only)  
+│
+├── uploads  
+│   ├── POST   /uploads/images       
+│       // Upload image(s), returns URL(s)  
+│   └── DELETE /uploads/images/:id   
+│       // Delete an uploaded image  
+│
+└── admin  
+    ├── GET    /admin/users          
+    │     // List all users (ADMIN only)  
+    ├── PATCH  /admin/users/:id/block  
+    │     // Block or unblock a user (ADMIN only)  
+    ├── GET    /admin/bookings       
+    │     // List all bookings in the system (ADMIN only)  
+    ├── GET    /admin/properties     
+    │     // List all properties in the system (ADMIN only)  
+    └── GET    /admin/dashboard      
+          // Retrieve system stats & analytics (ADMIN only)  
