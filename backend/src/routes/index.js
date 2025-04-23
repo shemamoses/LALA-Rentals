@@ -2,14 +2,20 @@
 const express = require("express");
 const router = express.Router();
 
-const userRoutes = require("./userRoutes");
-const propertyRoutes = require("./propertyRoutes");
-const bookingRoutes = require("./bookingRoutes");
-const authRoutes = require("./authRoutes");
+// Import routers
+const authRouter = require("./authRoutes");
+const propertiesRouter = require("./propertiesRoutes");
+const bookingsRouter = require("./bookingsRoutes");
+const reviewsRouter = require("./reviewsRoutes");
+const uploadsRouter = require("./uploadsRoutes");
+const adminRouter = require("./adminRoutes");
 
-router.use("/auth", authRoutes);
-router.use("/users", userRoutes);
-router.use("/properties", propertyRoutes);
-router.use("/bookings", bookingRoutes);
+// Register routes
+app.use("/auth", authRouter);
+app.use("/properties", propertiesRouter);
+app.use("/bookings", bookingsRouter);
+app.use("/reviews", reviewsRouter);
+app.use("/uploads", uploadsRouter);
+app.use("/admin", adminRouter);
 
 module.exports = router;
